@@ -39,7 +39,6 @@ public class FacadeDAO implements IFacadeDAO {
 		return mariaDB.transliterateInDB(pageId, arabicText);
 	}
 
-
 	@Override
 	public Map<String, String> lemmatizeWords(String text) {
 		// TODO Auto-generated method stub
@@ -47,7 +46,7 @@ public class FacadeDAO implements IFacadeDAO {
 	}
 
 	@Override
-	public  Map<String, List<String>> extractPOS(String text) {
+	public Map<String, List<String>> extractPOS(String text) {
 		// TODO Auto-generated method stub
 		return mariaDB.extractPOS(text);
 	}
@@ -83,11 +82,9 @@ public class FacadeDAO implements IFacadeDAO {
 	}
 
 	@Override
-	public Map<String, String>segmentWords(String text) {
+	public Map<String, String> segmentWords(String text) {
 		// TODO Auto-generated method stub
 		return mariaDB.segmentWords(text);
 	}
-
-
 
 }
