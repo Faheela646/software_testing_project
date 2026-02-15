@@ -57,4 +57,11 @@ public class DatabaseConnection {
             }
         }
     }
+
+    public static void resetInstance() {
+        if (INSTANCE != null) {
+            INSTANCE.closeConnection();
+            INSTANCE = null;
+        }
+    }
 }
