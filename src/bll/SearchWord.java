@@ -39,7 +39,6 @@ public class SearchWord {
 							break;
 						}
 					}
-					break;
 				}
 			}
 		}
