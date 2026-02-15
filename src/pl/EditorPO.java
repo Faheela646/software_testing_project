@@ -212,10 +212,11 @@ public class EditorPO extends JFrame {
 							selectedDoc = null;
 							selectedDoc = businessObj.getFile(selectedDocFileId);
 							pages = selectedDoc.getPages();
-							String selectedDocContent = null;
+							StringBuilder selectedDocContentBuilder = new StringBuilder();
 							for (int i = 0; i < pages.size(); i++) {
-								selectedDocContent = pages.get(i).getPageContent();
+								selectedDocContentBuilder.append(pages.get(i).getPageContent()).append(" ");
 							}
+							String selectedDocContent = selectedDocContentBuilder.toString();
 
 							List<String> unselectedDocsContent = new ArrayList<String>();
 							for (int row = 0; row < fileTable.getRowCount(); row++) {
@@ -224,11 +225,11 @@ public class EditorPO extends JFrame {
 									Documents unselectedDoc = null;
 									unselectedDoc = businessObj.getFile(unselectedDocFileId);
 									pages = unselectedDoc.getPages();
-									String unselectedDocContent = null;
+									StringBuilder unselectedDocContentBuilder = new StringBuilder();
 									for (int i = 0; i < pages.size(); i++) {
-										unselectedDocContent = pages.get(i).getPageContent();
+										unselectedDocContentBuilder.append(pages.get(i).getPageContent()).append(" ");
 									}
-									unselectedDocsContent.add(unselectedDocContent);
+									unselectedDocsContent.add(unselectedDocContentBuilder.toString());
 								}
 							}
 							tfidfScore = businessObj.performTFIDF(unselectedDocsContent, selectedDocContent);
