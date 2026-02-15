@@ -46,16 +46,16 @@ public class EditorDBDAO implements IEditorDBDAO {
 		Map<String, String> analyticsMap = new HashMap<>();
 		Map<String, Double> scoreMap = new HashMap<>();
 
-//		PreparedStatement fileStmt = null;
-//		PreparedStatement transliteratetStmt = null;
-//		PreparedStatement posStmt = null;
-//		PreparedStatement lemmaStmt = null;
-//		PreparedStatement rootStmt = null;
-//		PreparedStatement segmentStmt = null;
-//		PreparedStatement stemStmt = null;
-//		PreparedStatement pklStmt = null;
-//		PreparedStatement pmiStmt = null;
-//		PreparedStatement tfidfStmt = null;
+		// PreparedStatement fileStmt = null;
+		// PreparedStatement transliteratetStmt = null;
+		// PreparedStatement posStmt = null;
+		// PreparedStatement lemmaStmt = null;
+		// PreparedStatement rootStmt = null;
+		// PreparedStatement segmentStmt = null;
+		// PreparedStatement stemStmt = null;
+		// PreparedStatement pklStmt = null;
+		// PreparedStatement pmiStmt = null;
+		// PreparedStatement tfidfStmt = null;
 		try {
 
 			hash = HashCalculator.calculateHash(content);
@@ -81,7 +81,8 @@ public class EditorDBDAO implements IEditorDBDAO {
 			conn.setAutoCommit(false);
 
 			// Insert into files table
-//			fileStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+			// fileStmt = conn.prepareStatement(insertQuery,
+			// PreparedStatement.RETURN_GENERATED_KEYS);
 			fileStmt.setString(1, nameOfFile);
 			fileStmt.setString(2, hash);
 			fileStmt.executeUpdate();
@@ -92,7 +93,8 @@ public class EditorDBDAO implements IEditorDBDAO {
 
 			for (Pages page : pages) {
 				// Insert into pages table
-//				pageStmt = conn.prepareStatement(pageQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+				// pageStmt = conn.prepareStatement(pageQuery,
+				// PreparedStatement.RETURN_GENERATED_KEYS);
 				pageStmt.setInt(1, fileID);
 				pageStmt.setInt(2, page.getPageNumber());
 				pageStmt.setString(3, page.getPageContent());
@@ -104,7 +106,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 
 				// Transliteration
 				String transliteratedText = Transliteration.transliterate(page.getPageContent());
-//				transliteratetStmt = conn.prepareStatement(transliterateQuery);
+				// transliteratetStmt = conn.prepareStatement(transliterateQuery);
 				transliteratetStmt.setInt(1, pageId);
 				transliteratetStmt.setString(2, transliteratedText);
 				transliteratetStmt.executeUpdate();
@@ -112,7 +114,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				// POS Tagging
 				Map<String, List<String>> posTagsMap = POSTagger.extractPOS(page.getPageContent());
 
-//				posStmt = conn.prepareStatement(posQuery);
+				// posStmt = conn.prepareStatement(posQuery);
 
 				for (Map.Entry<String, List<String>> entry : posTagsMap.entrySet()) {
 					String word = entry.getKey();
@@ -128,7 +130,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 
 				analyticsMap = Lemmatization.lemmatizeWords(page.getPageContent());
 
-//				lemmaStmt = conn.prepareStatement(lemmaQuery);
+				// lemmaStmt = conn.prepareStatement(lemmaQuery);
 
 				for (Map.Entry<String, String> entry : analyticsMap.entrySet()) {
 					String word = entry.getKey();
@@ -143,7 +145,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				lemmaStmt.executeBatch();
 				analyticsMap = RootExtraction.extractRoots(page.getPageContent());
 
-//				rootStmt = conn.prepareStatement(rootQuery);
+				// rootStmt = conn.prepareStatement(rootQuery);
 
 				for (Map.Entry<String, String> entry : analyticsMap.entrySet()) {
 					String word = entry.getKey();
@@ -158,7 +160,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				rootStmt.executeBatch();
 
 				analyticsMap = WordSegmentation.extractSegments(page.getPageContent());
-//				segmentStmt = conn.prepareStatement(segmentQuery);
+				// segmentStmt = conn.prepareStatement(segmentQuery);
 
 				for (Map.Entry<String, String> entry : analyticsMap.entrySet()) {
 					String word = entry.getKey();
@@ -173,7 +175,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				segmentStmt.executeBatch();
 
 				analyticsMap = Stemmation.stemWords(page.getPageContent());
-//				stemStmt = conn.prepareStatement(stemQuery);
+				// stemStmt = conn.prepareStatement(stemQuery);
 
 				for (Map.Entry<String, String> entry : analyticsMap.entrySet()) {
 					String word = entry.getKey();
@@ -188,7 +190,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				stemStmt.executeBatch();
 
 				scoreMap = performPKL(page.getPageContent());
-//				pklStmt = conn.prepareStatement(pklQuery);
+				// pklStmt = conn.prepareStatement(pklQuery);
 
 				for (Map.Entry<String, Double> entry : scoreMap.entrySet()) {
 					String word = entry.getKey();
@@ -202,7 +204,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 				pklStmt.executeBatch();
 
 				scoreMap = performPMI(page.getPageContent());
-//				pmiStmt = conn.prepareStatement(pmiQuery);
+				// pmiStmt = conn.prepareStatement(pmiQuery);
 
 				for (Map.Entry<String, Double> entry : scoreMap.entrySet()) {
 					String word = entry.getKey();
@@ -217,7 +219,7 @@ public class EditorDBDAO implements IEditorDBDAO {
 
 			}
 
-//			tfidfStmt = conn.prepareStatement(tfidfQuery);
+			// tfidfStmt = conn.prepareStatement(tfidfQuery);
 			tfidfStmt.setInt(1, fileID);
 			tfidfStmt.setDouble(2, tfidf);
 			tfidfStmt.executeUpdate();
@@ -234,6 +236,15 @@ public class EditorDBDAO implements IEditorDBDAO {
 			}
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
+		} finally {
+			try {
+				if (conn != null) {
+					conn.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				LOGGER.error(e.getMessage());
+			}
 		}
 
 		return false;
@@ -284,13 +295,14 @@ public class EditorDBDAO implements IEditorDBDAO {
 			}
 			int pageId = pageIdRS.getInt("pageId");
 
-//	        // Update transliteration
-//	        String transliteratedText = Transliteration.transliterate(content);
-//	        String transliterateQuery = "UPDATE transliteratedpages SET transliteratedText = ? WHERE pageId = ?";
-//	        transliterateStmt = conn.prepareStatement(transliterateQuery);
-//	        transliterateStmt.setString(1, transliteratedText);
-//	        transliterateStmt.setInt(2, pageId);
-//	        transliterateStmt.executeUpdate();
+			// // Update transliteration
+			// String transliteratedText = Transliteration.transliterate(content);
+			// String transliterateQuery = "UPDATE transliteratedpages SET
+			// transliteratedText = ? WHERE pageId = ?";
+			// transliterateStmt = conn.prepareStatement(transliterateQuery);
+			// transliterateStmt.setString(1, transliteratedText);
+			// transliterateStmt.setInt(2, pageId);
+			// transliterateStmt.executeUpdate();
 
 			// Update POS tagging
 			Map<String, List<String>> posTagsMap = POSTagger.extractPOS(content);
@@ -435,6 +447,15 @@ public class EditorDBDAO implements IEditorDBDAO {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
 			return false;
+		} finally {
+			try {
+				if (conn != null) {
+					conn.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				LOGGER.error(e.getMessage());
+			}
 		}
 	}
 
@@ -454,24 +475,24 @@ public class EditorDBDAO implements IEditorDBDAO {
 			return false;
 		}
 	}
-//	public boolean deleteFileInDB(int id) {
-//		String query = "DELETE FROM FILES WHERE fileId = ?";
-//
-//		PreparedStatement fileStmt = null;
-//
-//		try {
-//
-//			fileStmt = conn.prepareStatement(query);
-//
-//			fileStmt.setInt(1, id);
-//			fileStmt.executeUpdate();
-//
-//			return true;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
+	// public boolean deleteFileInDB(int id) {
+	// String query = "DELETE FROM FILES WHERE fileId = ?";
+	//
+	// PreparedStatement fileStmt = null;
+	//
+	// try {
+	//
+	// fileStmt = conn.prepareStatement(query);
+	//
+	// fileStmt.setInt(1, id);
+	// fileStmt.executeUpdate();
+	//
+	// return true;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return false;
+	// }
+	// }
 
 	@Override
 	public List<Documents> getFilesFromDB() {
@@ -517,6 +538,16 @@ public class EditorDBDAO implements IEditorDBDAO {
 			}
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage());
+		} finally {
+			try {
+				if (conn != null) {
+					conn.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				LOGGER.error(e.getMessage());
+			}
 		}
 		return documents;
 	}
@@ -562,8 +593,17 @@ public class EditorDBDAO implements IEditorDBDAO {
 				rollbackEx.printStackTrace();
 				LOGGER.error(rollbackEx.getMessage());
 			}
-			return null;
+		} finally {
+			try {
+				if (conn != null) {
+					conn.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				LOGGER.error(e.getMessage());
+			}
 		}
+		return null;
 	}
 
 	private List<String> getAllExistingFilesContent(Connection conn) throws SQLException {
