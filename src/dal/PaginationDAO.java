@@ -7,7 +7,7 @@ import dto.Pages;
 
 public class PaginationDAO {
 
-	static List<Pages> paginate(String fileContent) {
+	public static List<Pages> paginate(String fileContent) {
 		int pageSize = 100; // Words per page
 		int pageNumber = 1;
 		List<Pages> pages = new ArrayList<Pages>();
