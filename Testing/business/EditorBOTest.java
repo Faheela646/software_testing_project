@@ -1,4 +1,4 @@
-package bll;
+package business;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+import bll.EditorBO;
 import dal.IFacadeDAO;
 import dto.Documents;
 

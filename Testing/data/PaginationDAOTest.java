@@ -1,8 +1,9 @@
-package dal;
+package data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import dal.PaginationDAO;
 import dto.Pages;
 
 class PaginationDAOTest {

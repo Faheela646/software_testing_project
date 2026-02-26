@@ -1,9 +1,10 @@
-package bll;
+package business;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.ArrayList;
+import bll.SearchWord;
 import dto.Documents;
 import dto.Pages;
 
